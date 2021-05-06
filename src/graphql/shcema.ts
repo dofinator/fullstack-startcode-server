@@ -1,7 +1,9 @@
 import { makeExecutableSchema } from "graphql-tools";
 import { resolvers } from "./resolvers";
 
-const typeDefs = `
+const typeDefs = `#graphql
+
+
     type Friend {
         id: ID
         firstName: String
@@ -33,15 +35,22 @@ const typeDefs = `
         email: String!
         gender: Gender!
     }
+
+    input PositionInput {
+        email: String!
+        longitude: Float!
+        latitude: Float!
+    }
     
 
     type Mutation {
         createFriend(input: FriendInput): Friend
         updateFriend(input: FriendInput): Friend
         deleteFriend(id: ID!): String
+        addOrUpdatePosition(input: PositionInput): Boolean
+        findNearbyPlayers(email: String longitude: Float latitude: Float distance: Int): [Friend]
     }
         
-    
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

@@ -53,7 +53,7 @@ describe("### Describe the Friend Endpoints (/api/friends) ###", function () {
 
   //In this, and all the following REMOVE tests that requires authentication if you are using the simple version of friendRoutes
   describe("While attempting to get all users", function () {
-    it("it should get two users when authenticated", async () => {
+    xit("it should get two users when authenticated", async () => {
       const response = await request
         .get("/api/friends/all")
         .auth("pp@b.dk", "secret");
@@ -62,14 +62,14 @@ describe("### Describe the Friend Endpoints (/api/friends) ###", function () {
       expect(response.body.length).to.equal(3);
     });
 
-    it("it should get a 401 when NOT authenticated", async () => {
+    xit("it should get a 401 when NOT authenticated", async () => {
       const response = await request.get("/api/friends/all");
       expect(response.status).to.equal(401);
     });
   });
 
   describe("While attempting to add a user", function () {
-    it("it should Add the user Jan Olsen", async () => {
+    xit("it should Add the user Jan Olsen", async () => {
       const newFriend = {
         firstName: "Jan",
         lastName: "Olsen",
@@ -81,7 +81,7 @@ describe("### Describe the Friend Endpoints (/api/friends) ###", function () {
       expect(response.body.id).to.be.not.null;
     });
 
-    it("It should fail to Add user due to wrong password length", async () => {
+    xit("It should fail to Add user due to wrong password length", async () => {
       const newFriend = {
         firstName: "Jan",
         lastName: "Olsen",
@@ -95,21 +95,21 @@ describe("### Describe the Friend Endpoints (/api/friends) ###", function () {
   });
 
   describe("While logged in as a user", function () {
-    it("It should return the logged in user", async () => {
+    xit("It should return the logged in user", async () => {
       const response = await request
         .get("/api/friends/me")
         .auth("pp@b.dk", "secret");
       //console.log("***********" + response.body.firstName)
       expect(response.body.firstName).equal("Peter");
     });
-    it("It should return not authenticated when trying to acces /me endpoint", async () => {
+    xit("It should return not authenticated when trying to acces /me endpoint", async () => {
       const response = await request
         .get("/api/friends/me")
         .auth("asd@asd.dk", "ost");
       console.log("tstØØØØØØØØØØØØ " + response.status);
       expect(response.status).equals(401);
     });
-    it("It should edit the logged in user", async () => {
+    xit("It should edit the logged in user", async () => {
       const editFriend = {
         firstName: "Jan ",
         lastName: "Pedersen",
@@ -142,7 +142,7 @@ describe("### Describe the Friend Endpoints (/api/friends) ###", function () {
       expect(response.status).equal(500);
     });
 
-    it("It should not let a non-admin user find Donald Duck", async () => {
+    xit("It should not let a non-admin user find Donald Duck", async () => {
       const response = await request
         .get("/api/friends/find-user/pp@b.dk")
         .auth("dd@b.dk", "secret");

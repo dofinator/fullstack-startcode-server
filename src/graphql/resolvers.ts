@@ -1,10 +1,19 @@
 import FriendFacade from "../facades/friendFacade";
+import PositionFacade from "../facades/positionFacade"
 import { IFriend } from "../interfaces/IFriend";
 import { ApiError } from "../errors/apierror";
 import { Request } from "express";
 import fetch from "node-fetch";
+//import { in } from "joi";
 
 let friendFacade: FriendFacade;
+let positionFacade: PositionFacade;
+
+interface IPositionInput {
+  email: string,
+  longitude: number,
+  latitude: number
+}
 
 /*
 We don't have access to app or the Router so we need to set up the facade in another way
@@ -15,6 +24,9 @@ Just before the line where you start the server
 export function setupFacade(db: any) {
   if (!friendFacade) {
     friendFacade = new FriendFacade(db);
+  }
+  if (!positionFacade) {
+    positionFacade = new PositionFacade(db);
   }
 }
 
@@ -66,5 +78,14 @@ export const resolvers = {
     deleteFriend: async (_: object, { input }: { input: string }) => {
       return friendFacade.deleteFriend(input);
     },
-  },
+    addOrUpdatePosition: async (_: object, { input }: { input: IPositionInput }) => {
+
+      const result = positionFacade.addOrUpdatePosition(input.email, input.longitude, input.latitude);
+      if ((await result).name) {
+        return true
+      }
+
+      return false
+    }
+  }
 };
