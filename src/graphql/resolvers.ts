@@ -4,6 +4,7 @@ import { IFriend } from "../interfaces/IFriend";
 import { ApiError } from "../errors/apierror";
 import { Request } from "express";
 import fetch from "node-fetch";
+import { updateImportEqualsDeclaration } from "typescript";
 //import { in } from "joi";
 
 let friendFacade: FriendFacade;
@@ -13,6 +14,13 @@ interface IPositionInput {
   email: string,
   longitude: number,
   latitude: number
+}
+
+interface IPositionInputWithDistance {
+  email: string,
+  longitude: number,
+  latitude: number,
+  distance: number
 }
 
 /*
@@ -47,26 +55,7 @@ export const resolvers = {
     },
     getFriendByEmail: async (_: object, { input }: { input: string }) => {
       return friendFacade.getFriendFromEmail(input);
-    },
-
-    // getAllFriendsProxy: async (root: object, _: any, context: Request) => {
-    //   let options: any = { method: "GET" };
-
-    //   //This part only required if authentication is required
-    //   const auth = context.get("authorization");
-    //   if (auth) {
-    //     options.headers = { authorization: auth };
-    //   }
-    //   return fetch(
-    //     `http://localhost:${process.env.PORT}/api/friends/all`,
-    //     options
-    //   ).then((r) => {
-    //     if (r.status >= 400) {
-    //       throw new Error(r.statusText);
-    //     }
-    //     return r.json();
-    //   });
-    // },
+    }
   },
   Mutation: {
     createFriend: async (_: object, { input }: { input: IFriend }) => {
@@ -79,13 +68,14 @@ export const resolvers = {
       return friendFacade.deleteFriend(input);
     },
     addOrUpdatePosition: async (_: object, { input }: { input: IPositionInput }) => {
-
       const result = positionFacade.addOrUpdatePosition(input.email, input.longitude, input.latitude);
       if ((await result).name) {
         return true
       }
-
       return false
+    },
+    findNearbyPlayers: async (_: object, {input}: {input: IPositionInputWithDistance}) => {
+      return positionFacade.findNearbyFriends(input.email, input.longitude, input.latitude, input.distance);
     }
   }
 };

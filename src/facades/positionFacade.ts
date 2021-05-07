@@ -43,11 +43,9 @@ class PositionFacade {
     return result.value;
   }
 
-  async findNearbyFriends(email: string, password: string, longitude: number, latitude: number, distance: number): Promise<Array<IPosition>> {
+  async findNearbyFriends(email: string, longitude: number, latitude: number, distance: number): Promise<Array<IPosition>> {
     const friendExist = await this.friendFacade.getFriendFromEmail(email);
-
     await this.addOrUpdatePosition(email, longitude, latitude);
-
     return this.positionCollection.find({
       location: {
         $near: {
@@ -60,10 +58,6 @@ class PositionFacade {
         }
       }
     }).toArray()
-
-
-
-    throw new Error("Not Implemented");
   }
 
   async getAllPositions(): Promise<Array<IPosition>> {

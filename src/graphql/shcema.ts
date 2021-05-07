@@ -11,7 +11,19 @@ const typeDefs = `#graphql
         gender: Gender
         email: String
         role: String
+    }
 
+
+    
+    type Point {
+        type: String
+        coordinates: [Float]
+    } 
+
+    type FriendPosition {
+        email: String
+        name: String
+        location: Point
     }
 
     enum Gender {
@@ -23,7 +35,7 @@ const typeDefs = `#graphql
     """
     Queries available for Friends
     """
-     type Query {
+    type Query {
         getFriendByEmail(input: String): Friend
         allFriends: [Friend]!
         
@@ -41,6 +53,13 @@ const typeDefs = `#graphql
         longitude: Float!
         latitude: Float!
     }
+
+    input PositionInputWithDistance {
+        email: String!
+        longitude: Float!
+        latitude: Float!
+        distance: Float!
+    }
     
 
     type Mutation {
@@ -48,7 +67,7 @@ const typeDefs = `#graphql
         updateFriend(input: FriendInput): Friend
         deleteFriend(id: ID!): String
         addOrUpdatePosition(input: PositionInput): Boolean
-        findNearbyPlayers(email: String longitude: Float latitude: Float distance: Int): [Friend]
+        findNearbyPlayers(input: PositionInputWithDistance): [FriendPosition]
     }
         
 `;
