@@ -21,6 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
+
 //app.use("/graphql", authMiddleware)
 
 app.use("/graphql", (req, res, next) => {
