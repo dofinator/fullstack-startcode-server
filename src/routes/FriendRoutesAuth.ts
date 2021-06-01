@@ -40,7 +40,7 @@ router.post("/", async function (req, res, next) {
 
 const USE_AUTHENTICATION = !process.env.SKIP_AUTHENTICATION;
 console.log(USE_AUTHENTICATION)
-if (!USE_AUTHENTICATION) {
+if (USE_AUTHENTICATION) {
   router.use(authMiddleware);
 }
 

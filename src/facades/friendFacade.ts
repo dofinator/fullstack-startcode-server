@@ -44,7 +44,7 @@ class FriendsFacade {
     try {
       const hashedpw = await bcrypt.hash(friend.password, BCRYPT_ROUNDS);
       const f = { ...friend, password: hashedpw, role: "user" };
-      const result = await this.friendCollection.insertOne({ ...f });
+      await this.friendCollection.insertOne({ ...f });
       return await this.friendCollection.findOne({ email: f.email });
     } catch (error) {
       throw new ApiError(error);

@@ -16,6 +16,8 @@ const DIST_TO_SEARCH = 500;
 //use these two lines for more streamlined tests of promise operations
 import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
+
+
 import { InMemoryDbConnector } from "../src/config/dbConnector";
 let positionCollection: mongo.Collection;
 let friendsCollection: mongo.Collection;
@@ -24,7 +26,8 @@ let positionFacade: PositionFacade;
 describe("## Verify the Positions Facade ##", () => {
   before(async function () {
     const client = await InMemoryDbConnector.connect();
-    const db = client.db();
+    const db = client.db("positionFacadeTestDB");
+    console.log(db.databaseName)
     positionCollection = db.collection("positions");
     friendsCollection = db.collection("friends");
     positionFacade = new PositionFacade(db);
@@ -61,7 +64,7 @@ describe("## Verify the Positions Facade ##", () => {
       role: "admin",
     };
 
-    const status = await friendsCollection.insertMany([f1, f2, f3]);
+    await friendsCollection.insertMany([f1, f2, f3]);
 
     await positionCollection.deleteMany({});
 

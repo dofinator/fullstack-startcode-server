@@ -4,7 +4,7 @@ import FriendFacade from "../src/facades/friendFacade";
 import chai from "chai";
 const expect = chai.expect;
 
-//use these two lines for more streamlined tests of promise operations
+//for more streamlined tests of promise operations
 import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 
@@ -17,9 +17,11 @@ let friendCollection: mongo.Collection;
 let facade: FriendFacade;
 
 describe("## Verify the Friends Facade ##", () => {
+
   before(async function () {
     const client = await InMemoryDbConnector.connect();
-    const db = client.db();
+    const db = client.db("friendFacadeTestDB");
+    console.log(db.databaseName)
     friendCollection = db.collection("friends");
     facade = new FriendFacade(db);
   });
@@ -76,6 +78,7 @@ describe("## Verify the Friends Facade ##", () => {
         password: "secret",
         role: "admin",
       };
+      await expect(facade.addFriend(newFriend)).to.be.rejectedWith(ApiError)
     });
   });
 
