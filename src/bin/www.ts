@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3333;
   const db = connection.db(process.env.DB_NAME);
   app.set("db", db);
   app.set("db-type", "REAL");
-  app.listen(PORT, () => debug(`Server started, listening on PORT: ${PORT}`));
   setupFacade(db);
+  app.listen(PORT, () => debug(`Server started, listening on PORT: ${PORT}`));
+  
 })();

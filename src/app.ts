@@ -1,19 +1,30 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
+import cors from "cors"
 import { ApiError } from "./errors/apierror";
 import friendsRoutesAuth from "./routes/FriendRoutesAuth";
 import { Request, Response, NextFunction } from "express";
 import { graphqlHTTP } from "express-graphql";
 import { schema } from "./graphql/shcema";
 import authMiddleware from "./middleware/basic-auth";
+import logger, { stream } from "./middleware/logger";
 
 dotenv.config();
 const debug = require("debug")("app");
 const app = express();
 
-app.use(express.json());
 
+app.use(express.json());
+app.use(cors())
+
+const morganFormat = process.env.NODE_ENV == "production" ? "combined" : "dev"
+app.use(require("morgan")(morganFormat, { stream }));
+
+logger.log("info", "Server started");
+
+
+// auth or not
 const USE_AUTHENTICATION = !process.env.SKIP_AUTHENTICATION;
 
 app.use((req, res, next) => {
@@ -34,17 +45,19 @@ app.use("/graphql", (req, res, next) => {
   if (body && body.operationName && body.query.includes("IntrospectionQuery")) {
     return next();
   }
-  if (USE_AUTHENTICATION && body.query && (body.mutation || body.query)) {
+  if (USE_AUTHENTICATION && (body.mutation || body.query)) {
     return authMiddleware(req, res, next);
   }
   next();
 });
 
+
+// Jeg har sat graphiql til at tjekke NODE_ENV, best practice
 app.use(
   "/graphql",
   graphqlHTTP({
     schema: schema,
-    graphiql: true,
+    graphiql: process.env.NODE_ENV === 'development',
   })
 );
 

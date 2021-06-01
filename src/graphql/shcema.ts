@@ -8,13 +8,11 @@ const typeDefs = `#graphql
         id: ID
         firstName: String
         lastName: String
-        gender: Gender
         email: String
         role: String
     }
 
 
-    
     type Point {
         type: String
         coordinates: [Float]
@@ -25,12 +23,6 @@ const typeDefs = `#graphql
         name: String
         location: Point
     }
-
-    enum Gender {
-        MALE
-        FEMALE
-        OTHER
-    }
     
     """
     Queries available for Friends
@@ -38,14 +30,13 @@ const typeDefs = `#graphql
     type Query {
         getFriendByEmail(input: String): Friend
         allFriends: [Friend]!
-        
+        getAllFriendsProxy: [Friend]!
     }
     input FriendInput {
         firstName: String!
         lastName: String!
         password: String!
         email: String!
-        gender: Gender!
     }
 
     input PositionInput {

@@ -3,7 +3,7 @@ import { Db, Collection, ObjectID } from "mongodb";
 import bcrypt from "bcryptjs";
 import { ApiError } from "../errors/apierror";
 import Joi, { ValidationError } from "joi";
-import { IfStatement } from "typescript";
+
 
 const BCRYPT_ROUNDS = 10;
 
@@ -12,7 +12,6 @@ const USER_INPUT_SCHEMA = Joi.object({
   lastName: Joi.string().min(2).max(50).required(),
   password: Joi.string().min(4).max(30).required(),
   email: Joi.string().email().required(),
-  gender: Joi.string().required()
 });
 
 const USER_INPUT_EDIT_SCHEMA = Joi.object({
@@ -93,7 +92,7 @@ class FriendsFacade {
     return false;
   }
 
-  async getAllFriends(): Promise<Array<IFriend>> {
+  async getAllFriendsNotUsed(): Promise<Array<IFriend>> {
     const users: unknown = await this.friendCollection.find({}).toArray();
     return users as Array<IFriend>;
   }
@@ -189,7 +188,7 @@ class FriendsFacade {
 
 
   //YOU should just remove the original getAllFriends and replace with this one
-  async getAllFriendsV2(): Promise<Array<IFriend>> {
+  async getAllFriends(): Promise<Array<IFriend>> {
     const users: Array<any> = await this.friendCollection.find(
       {},
       { projection: { password: 0 } }

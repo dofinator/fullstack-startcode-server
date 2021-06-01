@@ -11,7 +11,7 @@ async function makeTestPositions() {
 
   const friendsCollection = db.collection("friends");
   const hashedPW = await hash("secret", 8);
-  friendsCollection.createIndex({ email: 1 }, { unique: true });
+  friendsCollection.createIndex({email: 1}, { unique: true });
 
   await friendsCollection.deleteMany({});
 
@@ -30,7 +30,7 @@ async function makeTestPositions() {
     role: "user",
   };
   const f3 = {
-    firstName: "Peter",
+    firstName: "Kalle",
     lastName: "Admin",
     email: "peter@admin.dk",
     password: hashedPW,

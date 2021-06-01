@@ -6,3 +6,4 @@ export interface IFriend {
   password: string;
   role?: string;
 }
+

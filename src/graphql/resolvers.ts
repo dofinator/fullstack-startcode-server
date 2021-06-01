@@ -1,10 +1,8 @@
 import FriendFacade from "../facades/friendFacade";
 import PositionFacade from "../facades/positionFacade"
 import { IFriend } from "../interfaces/IFriend";
-import { ApiError } from "../errors/apierror";
 import { Request } from "express";
 import fetch from "node-fetch";
-import { updateImportEqualsDeclaration } from "typescript";
 //import { in } from "joi";
 
 let friendFacade: FriendFacade;
@@ -43,19 +41,23 @@ export const resolvers = {
   Query: {
     allFriends: (root: any, _: any, req: any) => {
       console.log(req.credentials);
-      // if (
-      //   !req.credentials ||
-      //   !req.credentials.role ||
-      //   req.credentials.role !== "admin"
-      // ) {
-      //   throw new ApiError("Not Authorized", 401);
-      // }
-
-      return friendFacade.getAllFriendsV2();
+         return friendFacade.getAllFriends();
     },
     getFriendByEmail: async (_: object, { input }: { input: string }) => {
       return friendFacade.getFriendFromEmail(input);
-    }
+    },
+    getAllFriendsProxy: async (root: object, _: any, context: Request) => {
+      let options: any = { method: "GET" }
+      //This part only required if authentication is required
+      const auth = context.get("authorization");
+      if (auth) {
+        options.headers = { 'authorization': auth }
+      }
+      return fetch(`http://localhost:${process.env.PORT}/api/friends/all`, options).then(r => {
+        if (r.status >= 400) { throw new Error(r.statusText) }
+        return r.json()
+      })
+    },
   },
   Mutation: {
     createFriend: async (_: object, { input }: { input: IFriend }) => {

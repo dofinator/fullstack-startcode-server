@@ -8,7 +8,6 @@ describe("What to do endpoint", function () {
     nock("https://www.boredapi.com")
       .get("/api/activity")
       .reply(200, { activity: "drink a single beer" });
-
     nock("https://api.genderize.io?name=")
       .get("/")
       .query(true)

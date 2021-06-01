@@ -2,7 +2,7 @@ import { Router } from "express";
 const router = Router();
 import { ApiError } from "../errors/apierror";
 import FriendFacade from "../facades/friendFacade";
-import { IFriend } from "../interfaces/IFriend";
+import authMiddleware from "../middleware/basic-auth";
 const debug = require("debug")("friend-routes");
 
 let facade: FriendFacade;
@@ -38,10 +38,9 @@ router.post("/", async function (req, res, next) {
 
 // ALL ENDPOINTS BELOW REQUIRES AUTHENTICATION
 
-import authMiddleware from "../middleware/basic-auth";
 const USE_AUTHENTICATION = !process.env.SKIP_AUTHENTICATION;
-
-if (USE_AUTHENTICATION) {
+console.log(USE_AUTHENTICATION)
+if (!USE_AUTHENTICATION) {
   router.use(authMiddleware);
 }
 
